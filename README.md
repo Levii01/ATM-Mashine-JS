@@ -3,6 +3,8 @@
 Pin to account: '5555'.
 Operator password: 'secret123'.
 
+To show logger press in browser F12 and show console (in chrome press Esc).
+
 The ATM Machine
 
 Implement a cash machine using Object Oriented Design. The implementation should be based on the idea that a person inserts their card into the ATM, feed their PIN and follow the menu instructions to handle the following cases:
