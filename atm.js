@@ -16,10 +16,13 @@ var atm = {
   secondPassword: 'secret',
 };
 var errors = {
-  cardDisabled: 'Card is disabled. Contact with operator to unlock card.',
-  blockCard: 'Card was disabled.',
+  cardDisabled: 'Card is disabled. Contact with operator to activate card.',
+  blockCard: 'Incorrect Pin. Card has been disabled.',
   wrongOperatorPassword: 'Wrong operator password',
   atmNoMoneyOperator: "Can't withdraw, not enough money in ATM",
+  noMoneyAccount: "You don't have enough money in your account",
+  atmNoMoneyAccount: "We must apologise you because we don't have enough money in this ATM." +
+  '<br>You need to find another ATM or visit our bank.',
 };
 
 function starter() {
@@ -67,9 +70,9 @@ function operatorOption() {
 }
 
 function atmWithdrawMoney() {
-  document.getElementById('box2').innerHTML = '<h2>Withdraw money:</h2><br>'
+  document.getElementById('box2').innerHTML = '<h2>Withdraw ATM:</h2><br>'
   + 'How much money you want to withdraw?<br>'
-  + '<input type="number" id="removeMoneyAtm" /><button class="button" onclick="withdrawAtm()"><span>OK</span></button>';
+  + '<input type="number" id="removeMoneyAtm" value=0 /><button class="button" onclick="withdrawAtm()"><span>OK</span></button>';
 }
 
 function withdrawAtm() {
@@ -89,7 +92,7 @@ function withdrawAtm() {
 function atmChargeMoney() {
   document.getElementById('box2').innerHTML = '<h2>Add money to ATM:</h2><br>'
   + 'How much money you want to charge?<br>'
-  + '<input type="number" id="addMoneyAtm" /><button class="button" onclick="chargeAtm()"><span>OK</span></button>';
+  + '<input type="number" id="addMoneyAtm" value=0 /><button class="button" onclick="chargeAtm()"><span>OK</span></button>';
 }
 
 function chargeAtm() {
@@ -135,14 +138,46 @@ function userOption() {
   '<h2>Select option:</h2> <button class="button" onclick="userChargeMoney()"><span>Fund account</span></button>'
    + '<br/><button class="button" onclick="userWithdrawMoney()"><span>Withdraw money</span></button>'
    + '<br/><button class="button" onclick="showBalance()"><span>Show balance</span></button>'
-  //  + '<br/><button class="button" onclick="pinOperator()"><span>Owner information</span></button>'
+   + '<br/><button class="button" onclick="owner()"><span>Owner information</span></button>'
    + '<br/><button class="button" onclick="logOut()"><span>Log out</span></button>';
 }
 
+function userWithdrawMoney() {
+  document.getElementById('box2').innerHTML = '<h2>Withdraw money:</h2><br>'
+  + 'How much money you want to withdraw?<br>'
+  + '<input type="number" id="removeMoneyAccount" value=0 /><button class="button" onclick="checkWithdrawAccount()"><span>OK</span></button>';
+}
+
+// document.getElementById(valueStr).value == 0;
+
+function checkWithdrawAccount() {
+  insertedMoneyAcc2 = parseInt(document.getElementById('removeMoneyAccount').value);
+  if (account.balance >= insertedMoneyAcc2) {
+    makeWithdrawAccount();
+  }else {
+    document.getElementById('box2').innerHTML = '<h2>Withdraw account:</h2><br>'
+    + 'Somethings gone wrong..';
+    document.getElementById('errors').innerHTML = errors.noMoneyAccount;
+  }
+}
+
+function makeWithdrawAccount() {
+  if (atm.money >= insertedMoneyAcc2) {
+    account.balance -= insertedMoneyAcc2;
+    atm.money -= insertedMoneyAcc2;
+    document.getElementById('box2').innerHTML = '<h2>Withdraw account:</h2><br>'
+    + 'Amount: ' + insertedMoneyAcc2 + '$<br/> New balance: ' + account.balance + '$';
+  }else {
+    document.getElementById('box2').innerHTML = '<h2>Withdraw account:</h2><br>'
+    + 'Somethings gone wrong..';
+    document.getElementById('errors').innerHTML = errors.atmNoMoneyAccount;
+  }
+}
+
 function userChargeMoney() {
-  document.getElementById('box2').innerHTML = '<h2>Fund account:</h2><br>'
+  document.getElementById('box2').innerHTML = '<h2>Charged account:</h2><br>'
   + 'How much money you want to charge?<br>'
-  + '<input type="number" id="addMoneyAccount" /><button class="button" onclick="chargeAccount()"><span>OK</span></button>';
+  + '<input type="number" id="addMoneyAccount" value=0 /><button class="button" onclick="chargeAccount()"><span>OK</span></button>';
 }
 
 function chargeAccount() {
@@ -153,18 +188,9 @@ function chargeAccount() {
   + 'Amount: ' + insertedMoneyAcc + '$<br/> New balance: ' + account.balance + '$';
 }
 
-function userWithdrawMoney() {
-  document.getElementById('box2').innerHTML = '<h2>Withdraw money:</h2><br>'
-  + 'How much money you want to withdraw?<br>'
-  + '<input type="number" id="removeMoneyAccount" /><button class="button" onclick="withdrawAccount()"><span>OK</span></button>';
-}
-
-function withdrawAccount() {
-  insertedMoneyAcc2 = parseInt(document.getElementById('removeMoneyAccount').value);
-  account.balance -= insertedMoneyAcc2;
-  atm.money -= insertedMoneyAcc2;
-  document.getElementById('box2').innerHTML = '<h2>Charged account:</h2><br>'
-  + 'Amount: ' + insertedMoneyAcc2 + '$<br/> New balance: ' + account.balance + '$';
+function owner() {
+  document.getElementById('box2').innerHTML = '<h2>Owner information:</h2><br>'
+  + 'Name: ' + account.name + '<br>Surname: ' + account.surname  + '<br>Active card: ' + card.endabled;
 }
 
 function showBalance() {
