@@ -2,7 +2,6 @@
 
 Pin to account: '5555'.
 Operator password: 'secret123'.
-Password to unlock card: 'secret'.
 
 The ATM Machine
 

@@ -13,7 +13,6 @@ var atm = {
   money: 4000,
   access: false,
   password: 's',
-  secondPassword: 'secret',
 };
 var errors = {
   cardDisabled: 'Card is disabled. Contact with operator to activate card.',
@@ -24,6 +23,17 @@ var errors = {
   atmNoMoneyAccount: "We must apologise you because we don't have enough money in this ATM." +
   '<br>You need to find another ATM or visit our bank.',
 };
+
+function errorHide()
+{
+  $('#errors').fadeOut(1000);
+}
+
+function showError(somethng) {
+  document.getElementById('errors').innerHTML = somethng;
+  $('#errors').fadeIn(700);
+  setTimeout('errorHide()', 5000);
+}
 
 function starter() {
   timer();
@@ -56,7 +66,8 @@ function testPasswordOperator() {
     document.getElementById('box2').innerHTML = '<h2>Correct password!.</h2>';
   } else {
     firstChoice();
-    document.getElementById('errors').innerHTML = errors.wrongOperatorPassword;
+    // document.getElementById('errors').innerHTML = errors.wrongOperatorPassword;
+    showError(errors.wrongOperatorPassword);
   }
 }
 
@@ -84,8 +95,7 @@ function withdrawAtm() {
   }else {
     document.getElementById('box2').innerHTML = '<h2>Withdraw fail:</h2><br>'
     + 'Not enough money in ATM';
-    document.getElementById('errors').innerHTML = errors.atmNoMoneyOperator;
-
+    showError(errors.atmNoMoneyOperator);
   }
 }
 
@@ -118,7 +128,8 @@ function testPinUser() {
   insertedPin = parseInt(document.getElementById('pin').value);
   if (card.endabled) {
     pinAuthentication();
-  }else document.getElementById('errors').innerHTML = errors.cardDisabled;
+  }else showError(errors.cardDisabled);
+
 }
 
 function pinAuthentication() {
@@ -129,7 +140,7 @@ function pinAuthentication() {
   } else {
     firstChoice();
     disabledCard();
-    document.getElementById('errors').innerHTML = errors.blockCard;
+    showError(errors.blockCard);
   }
 }
 
@@ -157,7 +168,7 @@ function checkWithdrawAccount() {
   }else {
     document.getElementById('box2').innerHTML = '<h2>Withdraw account:</h2><br>'
     + 'Somethings gone wrong..';
-    document.getElementById('errors').innerHTML = errors.noMoneyAccount;
+    showError(errors.noMoneyAccount);
   }
 }
 
@@ -170,7 +181,7 @@ function makeWithdrawAccount() {
   }else {
     document.getElementById('box2').innerHTML = '<h2>Withdraw account:</h2><br>'
     + 'Somethings gone wrong..';
-    document.getElementById('errors').innerHTML = errors.atmNoMoneyAccount;
+    showError(errors.atmNoMoneyAccount);
   }
 }
 
@@ -208,9 +219,14 @@ function logOut() {
 }
 
 function endabledCard() {
-  card.endabled = true;
-  document.getElementById('box2').innerHTML = '<h2>Status card:</2>'
-  + '<h3>Card has been activated.</h3>';
+  if (card.endabled) {
+    document.getElementById('box2').innerHTML = '<h2>Status card:</2>'
+    + '<h3>Card is activate.</h3>';
+  }else {
+    card.endabled = true;
+    document.getElementById('box2').innerHTML = '<h2>Status card:</2>'
+    + '<h3>Card has been activated.</h3>';
+  }
 }
 
 function disabledCard() {
@@ -241,7 +257,7 @@ function timer() {
   if (second < 10) second = '0' + second;
 
   document.getElementById('clock').innerHTML = day + '.' + month + '.' + year +
-      ' | ' + hour + ':' + minute + ':' + second;
+      '  ' + hour + ':' + minute + ':' + second;
 
   document.getElementById('status').innerHTML = 'Logged in: ' + card.authentication
   + '<br/>Active card: ' + card.endabled + '<br/>Operator access: ' + atm.access + atm.money;
