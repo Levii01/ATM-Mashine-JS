@@ -19,6 +19,7 @@ var errors = {
   cardDisabled: 'Card is disabled. Contact with operator to unlock card.',
   blockCard: 'Card was disabled.',
   wrongOperatorPassword: 'Wrong operator password',
+  atmNoMoneyOperator: "Can't withdraw, not enough money in ATM",
 };
 
 function starter() {
@@ -60,9 +61,29 @@ function operatorOption() {
   document.getElementById('box1').innerHTML =
   '<h2>ATM operator options:</h2> <button class="button" onclick="atmChargeMoney()"><span>Add money to ATM</span></button>'
    + '<br/><button class="button" onclick="atmWithdrawMoney()"><span>Withdraw money from ATM</span></button>'
-   + '<br/><button class="button" onclick="showBalanceAtm()"><span>Show ATM balance</span></button>'
+   + '<br/><button class="button" onclick="showAtmBalance()"><span>Show ATM balance</span></button>'
    + '<br/><button class="button" onclick="endabledCard()"><span>Activate user card</span></button>'
    + '<br/><button class="button" onclick="operatorLogOut()"><span>Log out</span></button>';
+}
+
+function atmWithdrawMoney() {
+  document.getElementById('box2').innerHTML = '<h2>Withdraw money:</h2><br>'
+  + 'How much money you want to withdraw?<br>'
+  + '<input type="number" id="removeMoneyAtm" /><button class="button" onclick="withdrawAtm()"><span>OK</span></button>';
+}
+
+function withdrawAtm() {
+  insertedMoneyAtm2 = parseInt(document.getElementById('removeMoneyAtm').value);
+  if (atm.money >= insertedMoneyAtm2) {
+    atm.money -= insertedMoneyAtm2;
+    document.getElementById('box2').innerHTML = '<h2>Withdraw ATM:</h2><br>'
+    + 'Amount: ' + insertedMoneyAtm2 + '$<br/> New balance: ' + atm.money + '$';
+  }else {
+    document.getElementById('box2').innerHTML = '<h2>Withdraw fail:</h2><br>'
+    + 'Not enough money in ATM';
+    document.getElementById('errors').innerHTML = errors.atmNoMoneyOperator;
+
+  }
 }
 
 function atmChargeMoney() {
@@ -72,29 +93,14 @@ function atmChargeMoney() {
 }
 
 function chargeAtm() {
-  insertedMoneyAcc = parseInt(document.getElementById('addMoneyAccount').value);
-  account.balance += insertedMoneyAcc;
-  atm.money += insertedMoneyAcc;
-  document.getElementById('box2').innerHTML = '<h2>Charged account:</h2><br>'
-  + 'Amount: ' + insertedMoneyAcc + '$<br/> New balance: ' + account.balance + '$';
+  insertedMoneyAtm = parseInt(document.getElementById('addMoneyAtm').value);
+  atm.money += insertedMoneyAtm;
+  document.getElementById('box2').innerHTML = '<h2>Charged ATM:</h2><br>'
+  + 'Amount: ' + insertedMoneyAtm + '$<br/> New balance: ' + atm.money + '$';
 }
 
-function userWithdrawMoney() {
-  document.getElementById('box2').innerHTML = '<h2>Withdraw money:</h2><br>'
-  + 'How much money you want to withdraw?<br>'
-  + '<input type="number" id="removeMoneyAccount" /><button class="button" onclick="withdrawAccount()"><span>OK</span></button>';
-}
-
-function withdrawAccount() {
-  insertedMoneyAcc2 = parseInt(document.getElementById('removeMoneyAccount').value);
-  account.balance -= insertedMoneyAcc2;
-  atm.money -= insertedMoneyAcc2;
-  document.getElementById('box2').innerHTML = '<h2>Charged account:</h2><br>'
-  + 'Amount: ' + insertedMoneyAcc2 + '$<br/> New balance: ' + account.balance + '$';
-}
-
-function showBalance() {
-  document.getElementById('box2').innerHTML = '<h2>Current balance:</h2><br><h3>' + account.balance + '$</h3>';
+function showAtmBalance() {
+  document.getElementById('box2').innerHTML = '<h2>Current ATM balance:</h2><br><h3>' + atm.money + '$</h3>';
 }
 
 // #
