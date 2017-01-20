@@ -1,5 +1,5 @@
 var card = {
-  pin: 5,
+  pin: 5555,
   authentication: false,
   endabled: true,
 };
@@ -12,7 +12,7 @@ var account = {
 var atm = {
   money: 4000,
   access: false,
-  password: 's',
+  password: 'secret123',
 };
 var errors = {
   cardDisabled: 'Card is disabled. Contact with operator to activate card.',
@@ -30,6 +30,7 @@ function errorHide()
 }
 
 function showError(somethng) {
+  console.warn(new Date() + ' Error: ' + somethng);
   document.getElementById('errors').innerHTML = somethng;
   $('#errors').fadeIn(700);
   setTimeout('errorHide()', 5000);
@@ -41,6 +42,7 @@ function starter() {
 }
 
 function firstChoice() {
+  console.info(new Date() + 'ATM start page');
   document.getElementById('box1').innerHTML = '<h2>Select option:</h2>'
   + '<button class="button" onclick="insertPin()"><span>Insert card </span></button> '
   + '<br/><button class="button" onclick="pinOperator()"><span>Log in as operator </span></button>';
@@ -92,6 +94,7 @@ function withdrawAtm() {
     atm.money -= insertedMoneyAtm2;
     document.getElementById('box2').innerHTML = '<h2>Withdraw ATM:</h2><br>'
     + 'Amount: ' + insertedMoneyAtm2 + '$<br/> New balance: ' + atm.money + '$';
+    console.warn(new Date() + 'Operator withdraw money from ATM, Amount: ' + insertedMoneyAtm2);
   }else {
     document.getElementById('box2').innerHTML = '<h2>Withdraw fail:</h2><br>'
     + 'Not enough money in ATM';
@@ -110,10 +113,13 @@ function chargeAtm() {
   atm.money += insertedMoneyAtm;
   document.getElementById('box2').innerHTML = '<h2>Charged ATM:</h2><br>'
   + 'Amount: ' + insertedMoneyAtm + '$<br/> New balance: ' + atm.money + '$';
+  console.warn(new Date() + 'Operator charge ATM, Amount: ' + insertedMoneyAtm);
+
 }
 
 function showAtmBalance() {
   document.getElementById('box2').innerHTML = '<h2>Current ATM balance:</h2><br><h3>' + atm.money + '$</h3>';
+  console.warn(new Date() + 'Operator show atm balance');
 }
 
 // #
@@ -178,6 +184,7 @@ function makeWithdrawAccount() {
     atm.money -= insertedMoneyAcc2;
     document.getElementById('box2').innerHTML = '<h2>Withdraw account:</h2><br>'
     + 'Amount: ' + insertedMoneyAcc2 + '$<br/> New balance: ' + account.balance + '$';
+    console.log(new Date() + 'User withdraw money, Amount: ' + insertedMoneyAcc2);
   }else {
     document.getElementById('box2').innerHTML = '<h2>Withdraw account:</h2><br>'
     + 'Somethings gone wrong..';
@@ -197,23 +204,29 @@ function chargeAccount() {
   atm.money += insertedMoneyAcc;
   document.getElementById('box2').innerHTML = '<h2>Charged account:</h2><br>'
   + 'Amount: ' + insertedMoneyAcc + '$<br/> New balance: ' + account.balance + '$';
+  console.log(new Date() + 'User charge account, Amount: ' + insertedMoneyAcc);
+
 }
 
 function owner() {
   document.getElementById('box2').innerHTML = '<h2>Owner information:</h2><br>'
   + 'Name: ' + account.name + '<br>Surname: ' + account.surname  + '<br>Active card: ' + card.endabled;
+  console.log(new Date() + 'Show information about owner');
 }
 
 function showBalance() {
   document.getElementById('box2').innerHTML = '<h2>Current balance:</h2><br><h3>' + account.balance + '$</h3>';
+  console.log(new Date() + 'Show account balance');
 }
 
 // selectors :)
 function logIn() {
+  console.log(new Date() + 'Log in ' + 'Name: ' + account.name + ' Surname: ' + account.surname);
   card.authentication = true;
 }
 
 function logOut() {
+  console.log(new Date() + 'Log out ' + 'Name: ' + account.name + ' Surname: ' + account.surname);
   card.authentication = false;
   firstChoice();
 }
@@ -226,19 +239,25 @@ function endabledCard() {
     card.endabled = true;
     document.getElementById('box2').innerHTML = '<h2>Status card:</2>'
     + '<h3>Card has been activated.</h3>';
+    console.log(new Date() + 'Disabled card ' + 'Name: ' + account.name + ' Surname: ' + account.surname + ' ,Status card:' + card.endabled);
   }
 }
 
 function disabledCard() {
   card.endabled = false;
+  console.log(new Date() + 'Disabled card ' + 'Name: ' + account.name + ' Surname: ' + account.surname + ' ,Status card:' + card.endabled);
+
 }
 
 function operatorLogIn() {
   atm.access = true;
+  console.warn(new Date() + 'Log in: operator');
+
 }
 
 function operatorLogOut() {
   atm.access = false;
+  console.warn(new Date() + 'Log in: operator');
   firstChoice();
 }
 
@@ -258,8 +277,11 @@ function timer() {
 
   document.getElementById('clock').innerHTML = day + '.' + month + '.' + year +
       '  ' + hour + ':' + minute + ':' + second;
-
-  document.getElementById('status').innerHTML = 'Logged in: ' + card.authentication
-  + '<br/>Active card: ' + card.endabled + '<br/>Operator access: ' + atm.access + atm.money;
+  // status();
   setTimeout('timer()', 1000);
-};
+}
+
+function status() {
+  document.getElementById('status').innerHTML = 'Logged in: ' + card.authentication
+  + ',  Active card: ' + card.endabled + '<br/>Operator access: ' + atm.access + ',  Bank $: ' + atm.money;
+}
